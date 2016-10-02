@@ -1,53 +1,54 @@
-var mysql = require("mysql");
-var inquirer = require("inquirer")
+	var mysql = require("mysql");
+	var inquirer = require("inquirer")
 
-var inStock = [];
-var itemID = [];
-var storeHas = false;
-
-
-var connection = mysql.createConnection({
-	host: "localhost",
-	port: 3306,
-	user: "root",
-	password: "",
-	database: "Bamazon"
-});
-
-connection.connect(function(err) {
-	if(err) {
-		throw err;
-	}
-	console.log("connected as id", connection.threadId);
-	
-});
+	var inStock = [];
+	var itemID = [];
+	var userSelection = [];
+	var userAmount = [];
+	var storeHas = false;
 
 
 
-//read
+
+	var connection = mysql.createConnection({
+		host: "localhost",
+		port: 3306,
+		user: "root",
+		password: "",
+		database: "Bamazon"
+	});
+
+//establishing connection
+	connection.connect(function(err) {
+		if(err) {
+			throw err;
+		}
+		console.log("connected as id", connection.threadId);
+		
+	});
+
+
+//reading SQL
 
 	connection.query('SELECT * FROM products', function(err,results) {
 	if(err) {
 		throw err;
 	}
 
-//reading inventory to customer
+	//reading inventory to customer
 		console.log(results)
 
 
-// capturing stock quantity and storing to global
-		for(var i = 0; i <results.length; i++){
-			inStock.push(results[i].stockQuantity);
-			itemID.push(results[i].id);
-			}
-			  
-	prompter();
+	// capturing stock quantity and storing to global for comparisons
+			for(var i = 0; i <results.length; i++){
+				inStock.push(results[i].stockQuantity);
+				itemID.push(results[i].id);
+				}
+	
+		prompter();
 	
 	});
 		
-
-
-
 
 
 var prompter = function(){
@@ -71,30 +72,34 @@ var prompter = function(){
 	
 	]).then(function(user) {
 		
+      
 
 
 		if (user.confirm == true) {
-				console.log("Processing");
+				console.log("Processing your request");
 				
 
 				for (var i = 0; i < itemID[i]; i++) {
 					
 					if (user.ID == itemID[i]) {
 						storeHas=true;
-						console.log("We have your Item.")
-						// console.log(user.ID);
-						// console.log(itemID);
-
+					
 					}
+
 				}
-			
 
 			if(storeHas) {
-				console.log("Now checking how many are in stock.")
+
+				userSelection = user.ID-1;
+				userAmount = user.number;
+				inventory();
+				
 			}
+
+			
 		}
 
-		
+
 		// var selectedItem = user.ID;
 		// console.log(user.number);
 
@@ -117,19 +122,30 @@ var prompter = function(){
         // }
    	
 	
-	 
-
-
 	});
 };
 
+//pulling userInventory
+	var inventory = function(num){
+
+		connection.query('SELECT * FROM products', function(err,results) {
+			if(err) {
+				throw err;
+			}
 
 
-// var inventory = function() {
-// 	var inStock = [];
-// 	for(var i = 0; i <results.length; i++){
-// 		console.log(results[i]);
-// 	}
+			if(results[userSelection].stockQuantity >= userAmount){
+				console.log("Your purhcase of " + userAmount + " " + results[userSelection].productName + "(s)" + " is on it's way!")
+			}
+		    
+		    else {
+		    	console.log("We're sorry, we only have " + results[userSelection].stockQuantity + " of those.")
+		    }
+
+			 });
+	  
+	};
+
 
 
 
