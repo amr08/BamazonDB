@@ -23,6 +23,7 @@
 		if(err) {
 			throw err;
 		}
+		
 		console.log("connected as id", connection.threadId);
 		
 	});
@@ -31,20 +32,25 @@
 //reading SQL
 
 	connection.query('SELECT * FROM products', function(err,results) {
-	if(err) {
-		throw err;
-	}
+		if(err) {
+			throw err;
+		}
 
-	//reading inventory to customer
-		console.log(results)
+//reading inventory to customer
+		for(var i = 0; i <results.length; i++){
+			inStock.push(results[i].stockQuantity);
+			itemID.push(results[i].id);
 
+			console.log("-------Select Items------");
+			console.log()
+			console.log(results[i].productName)
+			console.log("Price: " + results[i].price)
+			console.log("Left in Stock: " + results[i].stockQuantity)
+            console.log("Department " + results[i].departmentName)
+            console.log("Product ID: " + results[i].id)
+            console.log()
+		}
 
-	// capturing stock quantity and storing to global for comparisons
-			for(var i = 0; i <results.length; i++){
-				inStock.push(results[i].stockQuantity);
-				itemID.push(results[i].id);
-				}
-	
 		prompter();
 	
 	});
@@ -53,6 +59,7 @@
 
 var prompter = function(){
 	inquirer.prompt([
+
 	{
 		type:"input",
 		message:"What is the ID of the item you would like to purchase?",
@@ -73,11 +80,8 @@ var prompter = function(){
 	]).then(function(user) {
 		
       
-
-
 		if (user.confirm == true) {
 				console.log("Processing your request");
-				
 
 				for (var i = 0; i < itemID[i]; i++) {
 					
@@ -98,28 +102,6 @@ var prompter = function(){
 
 			
 		}
-
-
-		// var selectedItem = user.ID;
-		// console.log(user.number);
-
-// confirm(user)
-		
-
-
-
-  //  			if (user.ID == itemID) {
-  //  				console.log("I'd like to buy this item")
-  //  			}
-	//    console.log(itemID)
- // console.log(inStock)
-        // if(user.number <= inStock) {
-      		// console.log("Your FREE order is on the way!")
-        // }
-
-        // else {
-      		// console.log("I'm sorry")
-        // }
    	
 	
 	});
@@ -133,18 +115,35 @@ var prompter = function(){
 				throw err;
 			}
 
+			var pickedProduct = results[userSelection]
+			var whatsLeft = (pickedProduct.stockQuantity - userAmount)
 
-			if(results[userSelection].stockQuantity >= userAmount){
-				console.log("Your purhcase of " + userAmount + " " + results[userSelection].productName + "(s)" + " is on it's way!")
+
+			 if(pickedProduct.stockQuantity >= userAmount){
+				console.log("Your purhcase of " + userAmount + " " + pickedProduct.productName + "(s)" + " totals " + (pickedProduct.price * userAmount));
+
+				// connection.query('UPDATE products SET ? WHERE ?',[{
+				// 	stockQuantity: whatsLeft
+				// }, {
+				// 	stockQuantity: pickedProduct.stockQuantity
+				// }], function(err,results) {
+				// 	if(err) throw err;
+				// 	console.log(results)
+	
+			 //     });
 			}
 		    
 		    else {
-		    	console.log("We're sorry, we only have " + results[userSelection].stockQuantity + " of those.")
+		    	console.log("We're sorry, we only have " + pickedProduct.stockQuantity + " of " + pickedProduct.productName+"(s).")
+		    	
+					
 		    }
 
-			 });
+	   });
 	  
 	};
+
+
 
 
 
