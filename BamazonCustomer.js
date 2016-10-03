@@ -10,7 +10,7 @@
 
 
 
-	var connection = mysql.createConnection({
+	global.connection = mysql.createConnection({
 		host: "localhost",
 		port: 3306,
 		user: "root",
@@ -134,7 +134,7 @@ var prompter = function(){
 			}
 		    
 		    else {
-		    	console.log("We're sorry, we only have " + pickedProduct.stockQuantity + " of " + pickedProduct.productName+"(s).")
+		    	console.log("We're sorry, we only have " + pickedProduct.stockQuantity + " of " + pickedProduct.productName+"(s)")
 		    	
 					
 		    }
