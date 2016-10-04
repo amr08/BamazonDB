@@ -1,8 +1,12 @@
 	var inquirer = require("inquirer");
 	var mysql = require("mysql");
+	var viewProducts = []; 
+	var viewLow = [];
+	var addInventory = [];
+	
 
 
-		connection = mysql.createConnection({
+	var connection = mysql.createConnection({
 			host: "localhost",
 			port: 3306,
 			user: "root",
@@ -18,7 +22,90 @@
 			
 			console.log("connected as id", connection.threadId);
 			
-		});
+			});
+	
+
+		connection.query('SELECT * FROM products', function(err,results) {
+			if(err) {
+				throw err;
+			}
+
+
+		    //reading inventory to manager
+				viewProducts = function () {
+					for(var i = 0; i <results.length; i++){
+						console.log("-------Select Items------");
+						console.log()
+						console.log(results[i].productName)
+						console.log("Price: " + results[i].price)
+						console.log("Left in Stock: " + results[i].stockQuantity)
+				        console.log("Department " + results[i].departmentName)
+				        console.log("Product ID: " + results[i].id)
+				        console.log()
+						}
+		        	}
+
+		        viewLow = function() {
+					for(var i = 0; i <results.length; i++){
+						if(results[i].stockQuantity < 5) {
+							console.log(results[i].productName + ": " + results[i].stockQuantity + " left")
+		  					}	            	
+		           	 	}
+		       		}
+
+		        addInventory = function (){
+		        
+		        	inquirer.prompt([
+
+							{
+								name:"update",
+								type:"input",
+								message:"What is ID of Item you would like to add?"
+								
+							},
+
+							{
+								name:"howMany",
+								type:"input",
+								message:"How many would you like to add?"
+								
+							},
+							{
+								type:"confirm",
+								message:"Submit",
+								name:"confirm",
+								default: true
+							}
+		
+							]).then(function(user) {
+					
+								var index = parseInt(user.update-1);
+
+			                    var added = parseInt(user.howMany);
+			                   
+	 							var amountAdded = added + results[index].stockQuantity;
+
+									connection.query('UPDATE products SET ? WHERE ?', [{
+	 	         						stockQuantity: amountAdded
+	 	         					}, {
+	 	         						id: user.update
+	 	         					}
+	 	         					
+	 	         					], function(err,results) {
+			       						if(err) 
+			       							throw err;
+			       						
+			       						console.log(results);
+			       						console.log(user.update)
+
+	
+							 });
+
+	       			   });
+				};
+		   });
+
+		  
 
 //manager prompt
 	var mPrompter = function(){
@@ -54,8 +141,8 @@
 				  	break;
 		
 				case "Add to Inventory":
+					viewProducts();
 					addInventory();
-				  //   //Statements executed when the result of expression matches valueN
 				    break;
 
 				default:
@@ -69,44 +156,6 @@
 	 mPrompter();
 
 
-
-	 var viewProducts = function (){
-	 	console.log("view products")
-
-	 	//reading SQL
-
-		connection.query('SELECT * FROM products', function(err,results) {
-			if(err) {
-				throw err;
-			}
-
-	    //reading inventory to manager
-			for(var i = 0; i <results.length; i++){
-		
-
-				console.log("-------Select Items------");
-				console.log()
-				console.log(results[i].productName)
-				console.log("Price: " + results[i].price)
-				console.log("Left in Stock: " + results[i].stockQuantity)
-	            console.log("Department " + results[i].departmentName)
-	            console.log("Product ID: " + results[i].id)
-	            console.log()
-			}
-
-			
-		});
-
-
-	 }
-
-	 var viewLow = function (){
-		console.log("viewLow")
-	 }
-
-	 var addInventory = function (){
-		console.log("addInventory")
-	 }
 
 	 var newProduct = function (){
 		console.log("new products")

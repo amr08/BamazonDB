@@ -1,8 +1,8 @@
 	var mysql = require("mysql");
 	var inquirer = require("inquirer")
 
-	var inStock = [];
-	var itemID = [];
+	global.inStock = [];
+	global.itemID = [];
 	var userSelection = [];
 	var userAmount = [];
 	var storeHas = false;
@@ -10,7 +10,7 @@
 
 
 
-	global.connection = mysql.createConnection({
+	var connection = mysql.createConnection({
 		host: "localhost",
 		port: 3306,
 		user: "root",
