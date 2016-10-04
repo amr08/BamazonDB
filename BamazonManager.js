@@ -158,5 +158,56 @@
 
 
 	 var newProduct = function (){
-		console.log("new products")
+	 	connection.query('SELECT * FROM products', function(err,results) {
+			if(err) {
+				throw err;
+			}
+
+
+	 	inquirer.prompt([
+
+			{
+			name:"new Item",
+			type:"input",
+			message:"Please type the name of the Product you would like to add."
+								
+			},
+			{
+			name:"department",
+			type:"list",
+			choices: function(value) {
+                var choiceArray = [];
+                for (var i = 0; i < results.length; i++) {
+                    choiceArray.push(results[i].departmentName);
+                }
+                return choiceArray;
+            },
+			message:"Please choose Department."					
+			},
+			{
+			name:"price",
+			type:"input",
+			message: "What is the cost per item. Ex: 1.00:",							
+			},
+			{
+			name:"amount",
+			type:"input",
+			message: "Quantity",							
+			},
+			{
+			type:"confirm",
+			message:"Purchase items?",
+			name:"confirm",
+			default: true
+			}
+
+			]).then(function(user) {
+				console.log(user)
+
+		// connection.query('INSERT INTO songs (title, artist, genre) VALUES ("Hit me baby one more time", "Brittany Spears", "pop")', function(err,results) {
+ 	// 		if(err) {throw err;
+ 	// 		}
+ 	// 	console.log("Your results)
+});
+		});
 	 }
