@@ -122,15 +122,15 @@ var prompter = function(){
 			 if(pickedProduct.stockQuantity >= userAmount){
 				console.log("Your purhcase of " + userAmount + " " + pickedProduct.productName + "(s)" + " totals " + (pickedProduct.price * userAmount));
 
-				// connection.query('UPDATE products SET ? WHERE ?',[{
-				// 	stockQuantity: whatsLeft
-				// }, {
-				// 	stockQuantity: pickedProduct.stockQuantity
-				// }], function(err,results) {
-				// 	if(err) throw err;
-				// 	console.log(results)
+				connection.query('UPDATE products SET ? WHERE ?',[{
+					stockQuantity: whatsLeft
+				}, {
+					stockQuantity: pickedProduct.stockQuantity
+				}], function(err,results) {
+					if(err) throw err;
+					console.log(results)
 	
-			 //     });
+			     });
 			}
 		    
 		    else {

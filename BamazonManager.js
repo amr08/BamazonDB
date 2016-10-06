@@ -95,9 +95,7 @@
 			       						if(err) 
 			       							throw err;
 			       						
-			       						console.log(results);
-			       						console.log(user.update)
-
+			       						console.log("Inventory Updated");
 	
 							 });
 
@@ -167,7 +165,7 @@
 	 	inquirer.prompt([
 
 			{
-			name:"new Item",
+			name:"product",
 			type:"input",
 			message:"Please type the name of the Product you would like to add."
 								
@@ -196,18 +194,24 @@
 			},
 			{
 			type:"confirm",
-			message:"Purchase items?",
+			message:"Add items?",
 			name:"confirm",
 			default: true
 			}
 
 			]).then(function(user) {
-				console.log(user)
+				
 
-		// connection.query('INSERT INTO songs (title, artist, genre) VALUES ("Hit me baby one more time", "Brittany Spears", "pop")', function(err,results) {
- 	// 		if(err) {throw err;
- 	// 		}
- 	// 	console.log("Your results)
-});
+		connection.query('INSERT INTO products SET ?', {
+			productName: user.product,
+			departmentName: user.department, 
+			price: user.price,
+			stockQuantity: user.amount 
+			}, function(err,results) {
+ 			if(err) throw err;
+ 			
+ 		       console.log(user.product + " has been added to inventory.")
+             });
 		});
+	});
 	 }
