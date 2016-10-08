@@ -39,7 +39,7 @@
 						console.log(results[i].productName)
 						console.log("Price: " + results[i].price)
 						console.log("Left in Stock: " + results[i].stockQuantity)
-				        console.log("Department " + results[i].departmentName)
+				        console.log("Department: " + results[i].departmentName)
 				        console.log("Product ID: " + results[i].id)
 				        console.log()
 						}
