@@ -11,8 +11,8 @@
 			port: 3306,
 			user: "root",
 			password: "",
-			database: "Bamazon"
-		});
+			database: "BamazonDB"
+	});
 
 //reading connection
 		connection.connect(function(err) {
@@ -60,7 +60,7 @@
 							{
 								name:"update",
 								type:"input",
-								message:"What is ID of Item you would like to add?"
+								message:"What is the ID of Item you would like to add?"
 								
 							},
 
@@ -99,8 +99,8 @@
 	
 							 });
 
-	       			   });
-				};
+	       			   	});
+					};
 		   });
 
 		  
@@ -152,8 +152,6 @@
 	};
 
 	 mPrompter();
-
-
 
 	 var newProduct = function (){
 	 	connection.query('SELECT * FROM products', function(err,results) {
@@ -214,4 +212,4 @@
              });
 		});
 	});
-	 }
+}

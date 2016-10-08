@@ -8,14 +8,12 @@
 	var storeHas = false;
 
 
-
-
 	var connection = mysql.createConnection({
 		host: "localhost",
 		port: 3306,
 		user: "root",
 		password: "",
-		database: "Bamazon"
+		database: "BamazonDB"
 	});
 
 //establishing connection
@@ -78,8 +76,7 @@ var prompter = function(){
 	}
 	
 	]).then(function(user) {
-		
-      
+		   
 		if (user.confirm == true) {
 				console.log("Processing your request");
 
@@ -89,7 +86,6 @@ var prompter = function(){
 						storeHas=true;
 					
 					}
-
 				}
 
 			if(storeHas) {
@@ -99,11 +95,9 @@ var prompter = function(){
 				inventory();
 				
 			}
-
 			
 		}
-   	
-	
+   		
 	});
 };
 
@@ -119,7 +113,7 @@ var prompter = function(){
 			var whatsLeft = (pickedProduct.stockQuantity - userAmount)
 
 
-			 if(pickedProduct.stockQuantity >= userAmount){
+			if(pickedProduct.stockQuantity >= userAmount){
 				console.log("Your purhcase of " + userAmount + " " + pickedProduct.productName + "(s)" + " totals " + (pickedProduct.price * userAmount));
 
 				connection.query('UPDATE products SET ? WHERE ?',[{
@@ -128,15 +122,13 @@ var prompter = function(){
 					stockQuantity: pickedProduct.stockQuantity
 				}], function(err,results) {
 					if(err) throw err;
-					console.log(results)
+					// console.log(results)
 	
 			     });
-			}
-		    
-		    else {
+
+		    } 	else {
 		    	console.log("We're sorry, we only have " + pickedProduct.stockQuantity + " of " + pickedProduct.productName+"(s)")
-		    	
-					
+		    					
 		    }
 
 	   });
